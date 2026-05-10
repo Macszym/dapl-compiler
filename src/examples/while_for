@@ -1,0 +1,13 @@
+function CurrentPrint(string: ToPrint, int: x){
+    out(ToPrint);
+    out(x);
+}
+var int: j = 0;
+while (j < 3){
+    CurrentPrint("Wartosc j wynosi:", j);
+    for (int: i = 0; i <= j; i = i + 1){
+        CurrentPrint("Wartosc i wynosi:", i);
+        }
+    j= j+1;
+    out(" ");
+}

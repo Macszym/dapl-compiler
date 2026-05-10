@@ -1,0 +1,169 @@
+#!/usr/bin/env python3
+
+from antlr4 import *
+from DAPLLexer import DAPLLexer
+from DAPLParser import DAPLParser
+from VariableListner import VariableListner
+from FirstVisitor import FirstVisitor
+from errors import *
+from errors import SyntaxError as CustomSyntaxError
+from ErrorListener import SyntaxErrorListener
+
+class Program:
+    def __init__(self, path: str, source_lines: list):
+        self.path = path
+        self.source_lines = source_lines
+
+    def execute(self):
+        try:
+            with open(self.path, "r", encoding='utf-8') as file:
+                input_text = file.read()
+        except FileNotFoundError:
+            print(f"Error: Source file '{self.path}' not found.")
+            return 1
+        except Exception as e:
+            print(f"Error reading file '{self.path}': {e}")
+            return 1
+
+        input_stream = InputStream(input_text)
+        lexer = DAPLLexer(input_stream)
+        tokens = CommonTokenStream(lexer)
+        parser = DAPLParser(tokens)
+
+        parser.removeErrorListeners()
+        error_listener = SyntaxErrorListener(self.source_lines)
+        parser.addErrorListener(error_listener)
+
+        try:
+            tree = parser.start()
+        except SyntaxError as e:
+            pass
+            print(e.message)
+            return 1
+
+        listener = VariableListner()
+
+        '''
+        Pass 1: Definitions (Variables, Constants, Functions, Table Schemas)
+        '''
+        try:
+            walker = ParseTreeWalker()
+            walker.walk(listener, tree)
+        except DoubleDeclarationError as e:
+            print(
+                f"Error: Double declaration of '{e.varName}'. First at line {e.line1}, then at line {e.line2}, column {e.column}.")
+            e.printError(source_lines)
+            return 1
+        except UknownNameException as e:
+            e.printError(source_lines)
+            return 1
+        except WrongShapeException as e:
+            e.printError(source_lines)
+            return 1
+        except UknownLibraryException as e:
+            e.printError(source_lines)
+            return 1
+        except Exception as e:
+            print(f"Error during definition pass: {e}")
+            import traceback
+            traceback.print_exc()
+            return 1
+
+        '''
+        Pass 2: Execution
+        '''
+        visitor = FirstVisitor(
+            variables=listener.getVariables(),
+            constants=listener.getConsants(),
+            tables=listener.getTables(),
+            tables_to_heap=listener.getTablesToHeap(),
+            heap=listener.getHeap(),
+            functions=listener.getFunctions(),
+            source_lines=self.source_lines,
+            library_functions=listener.getLibraryFunctions(),
+        )
+        try:
+            visitor.visit(tree)
+        except CustomSyntaxError as e:
+            print(e.message)
+        except UknownNameException as e:
+            e.printError(source_lines)
+        except WrongTypeException as e:
+            e.printError(self.source_lines)
+        except ZeroDivisionError:
+            print("Error: Division by zero.")
+        except ZeroDivisionException as e:
+            e.printError(self.source_lines)
+        except InvalidOperationException as e:
+            e.printError(self.source_lines)
+        except ConstantOperationExcpetion as e:
+            e.printError(self.source_lines)
+        except FunctionNotFoundException as e:
+            e.printError(self.source_lines)
+        except ArgumentCountException as e:
+            e.printError(self.source_lines)
+        except ArgumentTypeException as e:
+            e.printError(self.source_lines)
+        except ReturnOutsideFunctionException as e:
+            e.printError(self.source_lines)
+        except MissingReturnValueException as e:
+            e.printError(self.source_lines)
+        except VoidFunctionReturnsValueException as e:
+            e.printError(self.source_lines)
+        except ReturnTypeMismatchException as e:
+            e.printError(self.source_lines)
+        except MaxRecursionDepthExceededError as e:
+            e.printError(self.source_lines)
+        except WrongColumnName as e:
+            e.printError(self.source_lines)
+        except WrongColumnNumber as e:
+            e.printError(self.source_lines)
+        except WrongShapeException as e:
+            e.printError(self.source_lines)
+        except FileExistsError as e:
+            print(e)
+        except NotImplementedError as e:
+            print(f"Execution Error: Feature not fully implemented: {e}")
+            import traceback
+            traceback.print_exc()
+        except Exception as e:
+            print(f"An unexpected runtime error occurred: {e}")
+            import traceback
+            traceback.print_exc()
+            return 1
+        return 0
+
+
+if __name__ == "__main__":
+    # filename = "code" # Original
+    import sys
+
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
+    else:
+        filename = "code.dapl"  # Default to .dapl extension
+        # Create a dummy code.dapl for testing if it doesn't exist
+        try:
+            with open(filename, "x") as f:  # Create if not exists
+                f.write("// Default empty DAPL file for testing\n")
+                f.write("out(\"Hello from default code.dapl!\");\n")
+            print(f"Created dummy file: {filename}")
+        except FileExistsError:
+            pass
+    source_lines = []
+    try:
+        with open(filename, encoding='utf-8') as f:
+            source_lines = f.readlines()
+    except FileNotFoundError:
+        print(f"Error: Test file '{filename}' not found.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error reading test file '{filename}': {e}")
+        sys.exit(1)
+
+    program = Program(filename, source_lines)
+    exit_code = program.execute()
+    if exit_code == 0:
+        print("\nExecution finished successfully.")
+    else:
+        print(f"\nExecution failed with code {exit_code}.")

@@ -1,0 +1,15 @@
+var int: x = 1;
+var int: y = 100;
+{
+    var int: x = 2;
+    {
+        var int: x = 3;
+            out(x);        // 30 (najbliższa)
+            out(^x);       // 20 (jeden poziom wyżej)
+            out(^^x);      // 10 (dwa poziomy wyżej)
+            out(y);
+            out(^y);
+            out(^^y);
+            out(^^^x);
+    }
+}

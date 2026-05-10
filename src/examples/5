@@ -1,0 +1,13 @@
+var int: i = 1;
+var double: f = 1;
+var int: i2 = 1.5;
+var int: i3 = true;
+var int: i4 = "1";
+var bool: b = 1.0;
+
+out(i);
+out(f);
+out(i2);
+out(i3);
+out(i4);
+out(b);

@@ -1,0 +1,13 @@
+Table <int:empid, string:name, int:deptid> Employees = [
+    [1, "Ala",     10],
+    [2, "Bartek",  20],
+    [3, "Celina",  10],
+    [4, "Damian",  30]
+];
+Table <int:deptid, string:deptname> Departments = [
+    [10, "Kadry"],
+    [20, "IT"],
+    [30, "Sprzedaż"],
+    [40, "Marketing"]
+];
+Employees.join(Departments,deptid,deptid).show();

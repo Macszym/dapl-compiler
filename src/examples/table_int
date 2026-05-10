@@ -1,0 +1,7 @@
+var int: i = "6";
+out(i);
+
+Table <int: a, int: b> t1 = [[1, 2], [3, 4], [5, "6"]];
+
+t1.show();
+t1.apply(0, x => x * 3 + 5).show();

@@ -1,0 +1,17 @@
+var int: a = 8.9 + 1.2;
+out(a);
+
+var int: b = true or false;
+out(b);
+
+var double: c = 5 + 8.9;
+out(c);
+
+var bool: d = "true";
+out(d);
+
+var int: e = "1";
+out(e);
+
+var double: f = true;
+out(f);

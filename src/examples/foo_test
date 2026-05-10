@@ -1,0 +1,22 @@
+
+
+var int: x = 100;
+
+
+function foo(int: n) :int {
+  var int: x = n;
+  // x = n;
+
+  if(n > 0) {
+    foo(n-1);
+  }
+  out(x);
+  out(^x);
+  //out(^^x);
+  out("");
+  // cout << parent::parent::x << endl;
+  return: 0;
+}
+
+foo(6);
+

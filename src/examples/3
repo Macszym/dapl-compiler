@@ -1,0 +1,14 @@
+var int: x=100;
+{
+var int: x=150;
+function foo(int: a, int: y) : void {
+var int: x = 777;
+{
+  ^x = 7;
+  out(x);
+  out(^^x);
+  out(^x);
+}}
+
+foo(5, 7);
+}

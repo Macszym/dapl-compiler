@@ -1,0 +1,8 @@
+import str;
+
+Table t1 = read_csv("test.csv");
+
+var string: m = "Ma";
+
+t1.show();
+t1.filter(0, x => length(x) > 10).groupBy(0, 2, average).show();

@@ -1,0 +1,16 @@
+var int: x = 1;
+var int: y = 100;
+{{
+    var int: x = 2;
+    {
+        var int: x = 3;
+            out(x);
+            out(^x);
+            out(^^x);
+
+            out(y);
+            out(^y);
+            out(^^y);
+            out(^^^y);
+    }
+}}

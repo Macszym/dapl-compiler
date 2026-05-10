@@ -1,0 +1,9 @@
+var int: x=100;
+
+function foo(int: x, int: y) : void {
+  x = 1;
+  out(x);
+  out(^x);
+}
+
+foo(5, 7);

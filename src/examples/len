@@ -1,0 +1,8 @@
+import str;
+
+var string: s = "Ala ma kota";
+
+length(s);
+
+out(length(s));
+out(length("nie wiem"));

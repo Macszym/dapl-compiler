@@ -1,0 +1,9 @@
+// BŁĄD: Podwójna deklaracja
+var int: x = 5;
+var int: x = 10;  // DoubleDeclarationError
+
+// BŁĄD: Użycie niezadeklarowanej zmiennej
+out(undefinedVariable);  // UknownNameException
+
+// BŁĄD: Niezgodność typów
+var int: number = "text";  // WrongTypeException

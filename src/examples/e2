@@ -1,0 +1,16 @@
+var int: x = 1;
+var int: y = 100;
+
+function foo(int: n): int{
+    var int: x = n;
+
+    if (n > 0){
+        foo(n-1);
+    }
+    out(n);
+    out(^x);
+
+    return: 0;
+}
+
+foo(6);

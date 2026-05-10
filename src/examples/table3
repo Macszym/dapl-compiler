@@ -1,0 +1,1 @@
+Table <string: s, int: a, int: b> t1 = [["Ala", 4, 4],["Basia", 3]];

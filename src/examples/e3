@@ -1,0 +1,15 @@
+var int: a = 1.5;
+
+out(a);
+var bool: t = true;
+
+
+
+for (int: i = 1; i < 11; i = i + 1){
+{
+    var double: j = i;
+    if (i % 2 == 0){
+        out(j);
+    }
+}
+}
